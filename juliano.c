@@ -4,90 +4,120 @@
 
 
 
-//aritimetica de ponteiros;;
-//o nome de um vetor ja é um ponteiro.... ele contem o endereço de memoria;
+//desevolver um algoritmo de uma arvore binario, em que deve ter, também, o calculo e retorno da altura e quantidade de niveis que tem a arvore;
+// retorna a quantidade total de elementos que estao na arvore;
+
+//sempre preciso de um ponteiro para  o endereço do no raiz da minha arvore
+
+typedef struct no {
+    int info;// conteudo que sera referenciado(valor que sera inserido , buscado , manipulado...)
+    struct no *noEsquerda;//struct do no que ira apontar para a esquerda
+    struct no *noDireita;//struct do no qu e ira apontar para a direita;
+
+}No;//representação dos no da arvore;
 
 typedef struct {
-    int no;
-    int raiz;
-    int *valor_esquerda;
-    int *valor_direita;
+    No *raiz;//representaçao da raiz da arvore;
+    long int tamanhoArvore;//tamanho da arvore em bytes;
+    int quantidadeElementos;//representa a quantidade de elementos na arvore;
+    int nivel;//representa o nivel da arvore;
+    int altura;//representa a altura da arvore;
+    
 
-}arvore;
+}ArvBinaria;//representação da arvore;
 
 
-//procedimento para inserir um valor na arvore;;
-void inserirValor(int raiz, int valor){
-    arvore arvore;
-    arvore.raiz = raiz;
-    if(arvore.raiz == NULL){
-        arvore.raiz = valor;//se a arvore for vazia o valor que o usuario inseriu sera a raiz da arvore;
+//procedimento para inserir um valor a esquerda.. valor que sera menor que o no raiz(tanto da arvore quanto de uma sub-arvore);
+void inserirEsquerda(No *no,int valor){
+    if(no->noEsquerda == NULL){
+        No *novo = (No*)malloc(sizeof(No));
+        novo->info = valor;
+        novo->noDireita = NULL;
+        novo->noEsquerda = NULL;
+        no->noEsquerda= novo;
     }
     else{
-        if(valor > arvore.raiz){
-            arvore.valor_direita = &valor;
-            printf("\n\t valor %d inserido a direita ",valor);
+        if(valor < no->noEsquerda->info){
+            inserirEsquerda(no->noEsquerda,valor);
         }
         else{
-            arvore.valor_esquerda = &valor;
-            printf("\n\t valor %d inserido na esquerda",valor);
+            inserirDireita(no->noEsquerda,valor);
         }
     }
-
 }
-
-//procedimento para excluir um valor na arvore;
-void excluirValor(int valor){
-    arvore arvore;
-    if(arvore.no || arvore.raiz == NULL){
-        return NULL;
+//procedimento para inserir um valor a direita.. valor que sera maior que o no raiz(tanto da arvore quanto de uma sub-arvore);
+void inserirDireita(No *no, int valor){
+    if(no->noDireita == NULL){
+        No *novo = (No*)malloc(sizeof(No));
+        novo->info = valor;
+        novo->noDireita = NULL;
+        novo->noEsquerda = NULL;
+        no->noDireita = novo;
     }
     else{
-        valor == NULL;
-        free(valor);//VALOR DISPONIVEL PARA RECICLAGEM;
+        if(valor > no->noDireita->info){
+            inserirDireita(no->noDireita, valor);
+        }
+        else{
+            inserirEsquerda(no->noDireita, valor);
+        }
     }
-
 }
+//procedimento para inserir um novo valor na arvore;;
+void inserirConteudo(ArvBinaria arvore, int valor){
+    if(arvore.raiz == NULL){
+        No *novo  = (No*)malloc(sizeof(No));//criando e alocando de forma dinamica um novo no na memoria de tamanho em bytes da estrutura No;
+        novo->info = valor;
+        novo->noEsquerda =NULL;
+        novo->noDireita = NULL;
+        arvore.raiz = novo;
+    }
+    else{
+        if(valor < arvore.raiz->info){
+            inserirEsquerda(arvore.raiz, valor);
+        }
+        else{
+            inserirDireita(arvore.raiz, valor);   
+        }
+    }
+}
+//procedimento para imprimir os valores que estao na arvore na pre-ordem;
+void imprimirArvorePreOrdem(No *raiz){
+    if(raiz != NULL){
+        printf(" %d ",raiz->info);
+        imprimirArvorePreOrdem(raiz->noEsquerda);
+        imprimirArvorePreOrdem(raiz->noDireita);
+    }
+    else{
+        printf("\n\t a arvore binaria vazia.");
+    }
+}
+//procedimento para imprimir os valores que estao na arvore de forma simetrica;
+void imprimirArvoreSimetrica(No *raiz){
+    imprimirArvoreSimetrica(raiz->noEsquerda);    
+    printf(" %d ",raiz->info);
+    imprimirArvoreSimetrica(raiz->noDireita);
+}
+//procedimento para imprimir os valores que estao na arvore de forma pos-ordem.
+void imprimirArvorePosOrdem(No *raiz){
+    imprimirArvoreSimetrica(raiz->noEsquerda);    
+    imprimirArvoreSimetrica(raiz->noDireita);
+    printf(" %d ",raiz->info);
+}
+//funcao para calcular a quantidade de elementos na arvore;
+int quantidadeElementos(No *raiz){
+    if(raiz == NULL){
+        return 0;
+    }
+    else{
+        return 1 + quantidadeElementos(raiz->noEsquerda) + quantidadeElementos(raiz->noDireita);
+    }
+}
+//funcao busca , remover , indicar a quantidade de nivel, indicar o tamanho da altura da arvore,
+//indicar a quantidade de elementos na arvore, a quantidade de bytes da arvore(tamanho em bytes da arvore), indicar em que nivel o no esta na arvore;
 
 int main(void){
-    arvore arvore;
-
-    arvore.raiz = 250;//no raiz da minha arvore;
-
-    printf("\n\t digite um valor para preencher a arvore :");
-    scanf("%d",&arvore.no);
-
-    inserirValor(arvore.raiz,arvore.no);
-
+    
+    printf("hello wrodl");
+    return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* int i, vet[10] ={78,0,1,2,3,4,5,6,7,8,9};
-
-    /*for(int i=0;i<10;i++){
-        printf(" %d ",*(vet+ i));//aritimetica de ponteiros para gerar a impressao de todos endereço do vetor(numero);//
-    }
-
-    for(i=0;i<10;i++){
-        printf(" %d ",*vet);//a chamada do vetor vet ja é um ponteiro, ou seja, a partir que voce declara um vetor o nome de indetificaçao desse vetor ja torna um ponteiro.
-    }
-
-    return 0;*/
